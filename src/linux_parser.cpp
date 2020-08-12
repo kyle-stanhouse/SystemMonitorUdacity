@@ -101,7 +101,7 @@ float LinuxParser::MemoryUtilization() {
     //Total used memory = MemTotal - MemFree
     //Non cache/buffer memory (green) = Total used memory - (Buffers + Cached memory)
     //Buffers (blue) = Buffers
-    return (MemTotal - MemFree) - (Buffers + Cached);
+    return ( (MemTotal - MemFree) - (Buffers + Cached) );
 } 
 
 // TODO: Read and return the system uptime
@@ -116,7 +116,7 @@ long LinuxParser::UpTime() {
     linestream >> uptime >> idle;
 
     //std::cout << uptime << "/n";
-    uptime_d = std::stod(uptime);
+    //uptime_d = std::stod(uptime);
   }
   //return (int) std::stod(uptime);
   return 0;
