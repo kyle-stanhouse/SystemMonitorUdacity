@@ -67,7 +67,44 @@ vector<int> LinuxParser::Pids() {
 }
 
 // TODO: Read and return the system memory utilization
-float LinuxParser::MemoryUtilization() { return 0.0; }
+float LinuxParser::MemoryUtilization() { 
+
+  string line, key, value;
+  float MemTotal, MemFree, MemAvailable, Buffers, Cached;
+  //std::ifstream filestream(kOSPath);
+  std::ifstream filestream(kProcDirectory + kMeminfoFilename);
+
+  if (filestream.is_open()) {
+    while (std::getline(filestream, line)) {
+      //std::replace(line.begin(), line.end(), ' ', '_');
+      //std::replace(line.begin(), line.end(), '=', ' ');
+      //std::replace(line.begin(), line.end(), '"', ' ');
+      std::istringstream linestream(line);
+      while (linestream >> key >> value) {
+        if (key == "MemTotal") {
+            MemTotal = std::stof(value);  
+          }
+        else if( key == "MemFree"){
+            MemFree = std::stof(value); 
+        }
+        else if( key == "MemAvailable"){
+            MemAvailable = std::stof(value); 
+        }
+        else if( key == "Buffers"){
+            Buffers = std::stof(value); 
+        }
+        else if( key == "Cached"){
+            Cached = std::stof(value); 
+        }
+
+      }
+          //Total used memory = MemTotal - MemFree
+          //Non cache/buffer memory (green) = Total used memory - (Buffers + Cached memory)
+          //Buffers (blue) = Buffers
+    }
+  }
+    return ( (MemTotal - MemFree) - (Buffers + Cached) );
+} 
 
 // TODO: Read and return the system uptime
 long LinuxParser::UpTime() { return 0; }
