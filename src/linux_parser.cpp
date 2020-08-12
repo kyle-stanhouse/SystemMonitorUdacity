@@ -76,9 +76,6 @@ float LinuxParser::MemoryUtilization() {
 
   if (filestream.is_open()) {
     while (std::getline(filestream, line)) {
-      //std::replace(line.begin(), line.end(), ' ', '_');
-      //std::replace(line.begin(), line.end(), '=', ' ');
-      //std::replace(line.begin(), line.end(), '"', ' ');
       std::istringstream linestream(line);
       while (linestream >> key >> value) {
         if (key == "MemTotal") {
@@ -98,11 +95,11 @@ float LinuxParser::MemoryUtilization() {
         }
 
       }
-          //Total used memory = MemTotal - MemFree
-          //Non cache/buffer memory (green) = Total used memory - (Buffers + Cached memory)
-          //Buffers (blue) = Buffers
     }
   }
+    //Total used memory = MemTotal - MemFree
+    //Non cache/buffer memory (green) = Total used memory - (Buffers + Cached memory)
+    //Buffers (blue) = Buffers
     return ( (MemTotal - MemFree) - (Buffers + Cached) );
 } 
 
