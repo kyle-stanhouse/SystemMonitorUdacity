@@ -2,6 +2,7 @@
 #include <unistd.h>
 #include <string>
 #include <vector>
+#include <iostream>
 
 #include "linux_parser.h"
 
@@ -100,11 +101,26 @@ float LinuxParser::MemoryUtilization() {
     //Total used memory = MemTotal - MemFree
     //Non cache/buffer memory (green) = Total used memory - (Buffers + Cached memory)
     //Buffers (blue) = Buffers
-    return ( (MemTotal - MemFree) - (Buffers + Cached) );
+    return (MemTotal - MemFree) - (Buffers + Cached);
 } 
 
 // TODO: Read and return the system uptime
-long LinuxParser::UpTime() { return 0; }
+long LinuxParser::UpTime() { 
+  string uptime, idle;
+  string line;
+  double uptime_d;
+  std::ifstream stream(kProcDirectory + kVersionFilename);
+  if (stream.is_open()) {
+    std::getline(stream, line);
+    std::istringstream linestream(line); //allows us to read tokens
+    linestream >> uptime >> idle;
+
+    //std::cout << uptime << "/n";
+    uptime_d = std::stod(uptime);
+  }
+  //return (int) std::stod(uptime);
+  return 0;
+  }
 
 // TODO: Read and return the number of jiffies for the system
 long LinuxParser::Jiffies() { return 0; }
