@@ -71,7 +71,7 @@ vector<int> LinuxParser::Pids() {
 float LinuxParser::MemoryUtilization() { 
 
   string line, key, value;
-  float MemTotal, MemFree, MemAvailable, Buffers, Cached;
+  float MemTotal, MemFree, MemAvailable, Buffers, Cached, total, float_value;
   //std::ifstream filestream(kOSPath);
   std::ifstream filestream(kProcDirectory + kMeminfoFilename);
 
@@ -79,19 +79,20 @@ float LinuxParser::MemoryUtilization() {
     while (std::getline(filestream, line)) {
       std::istringstream linestream(line);
       while (linestream >> key >> value) {
-        if (key == "MemTotal") {
+        if (key == "MemTotal:") {
+            //float_value = std::stof(value);
             MemTotal = std::stof(value);  
           }
-        else if( key == "MemFree"){
+        else if( key == "MemFree:"){
             MemFree = std::stof(value); 
         }
-        else if( key == "MemAvailable"){
+        else if( key == "MemAvailable:"){
             MemAvailable = std::stof(value); 
         }
-        else if( key == "Buffers"){
+        else if( key == "Buffers:"){
             Buffers = std::stof(value); 
         }
-        else if( key == "Cached"){
+        else if( key == "Cached:"){
             Cached = std::stof(value); 
         }
 
@@ -101,6 +102,7 @@ float LinuxParser::MemoryUtilization() {
     //Total used memory = MemTotal - MemFree
     //Non cache/buffer memory (green) = Total used memory - (Buffers + Cached memory)
     //Buffers (blue) = Buffers
+    total = ( (MemTotal - MemFree) - (Buffers + Cached) );
     return ( (MemTotal - MemFree) - (Buffers + Cached) );
 } 
 
@@ -109,7 +111,8 @@ long LinuxParser::UpTime() {
   string uptime, idle;
   string line;
   double uptime_d;
-  std::ifstream stream(kProcDirectory + kVersionFilename);
+  long int uptime_int;
+  std::ifstream stream(kProcDirectory + kUptimeFilename);
   if (stream.is_open()) {
     std::getline(stream, line);
     std::istringstream linestream(line); //allows us to read tokens
@@ -117,9 +120,12 @@ long LinuxParser::UpTime() {
 
     //std::cout << uptime << "/n";
     //uptime_d = std::stod(uptime);
+    //uptime_int = (int) std::stod(uptime);
   }
   //return (int) std::stod(uptime);
-  return 0;
+  //uptime_int = std::stol(uptime);
+  return std::stol(uptime);
+  //return 0;
   }
 
 // TODO: Read and return the number of jiffies for the system

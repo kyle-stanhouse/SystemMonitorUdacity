@@ -60,5 +60,6 @@ int System::TotalProcesses() {
 long int System::UpTime() { 
     
     //Usage: long LinuxParser::UpTime();
+    //long int local_int = LinuxParser::UpTime();
     return LinuxParser::UpTime();
     }
