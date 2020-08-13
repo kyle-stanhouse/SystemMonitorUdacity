@@ -102,7 +102,7 @@ float LinuxParser::MemoryUtilization() {
     //Total used memory = MemTotal - MemFree
     //Non cache/buffer memory (green) = Total used memory - (Buffers + Cached memory)
     //Buffers (blue) = Buffers
-    total = ( (MemTotal - MemFree) - (Buffers + Cached) );
+    //total = ( (MemTotal - MemFree) - (Buffers + Cached) );
     return ( (MemTotal - MemFree) - (Buffers + Cached) );
 } 
 
@@ -123,8 +123,9 @@ long LinuxParser::UpTime() {
     //uptime_int = (int) std::stod(uptime);
   }
   //return (int) std::stod(uptime);
-  //uptime_int = std::stol(uptime);
-  return std::stol(uptime);
+  uptime_int = std::stol(uptime);
+  //return std::stol(uptime);
+  return uptime_int;
   //return 0;
   }
 
