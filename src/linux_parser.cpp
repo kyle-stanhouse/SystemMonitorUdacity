@@ -103,7 +103,7 @@ float LinuxParser::MemoryUtilization() {
     //Non cache/buffer memory (green) = Total used memory - (Buffers + Cached memory)
     //Buffers (blue) = Buffers
     //total = ( (MemTotal - MemFree) - (Buffers + Cached) );
-    return ( (MemTotal - MemFree) - (Buffers + Cached) );
+    return ( ( (MemTotal - MemFree) - (Buffers + Cached) ) / MemTotal );
 } 
 
 // TODO: Read and return the system uptime
@@ -145,7 +145,7 @@ long LinuxParser::IdleJiffies() { return 0; }
 // TODO: Read and return CPU utilization
 vector<string> LinuxParser::CpuUtilization() { return {}; }
 
-// TODO: Read and return the total number of processes
+// DONE: Read and return the total number of processes
 int LinuxParser::TotalProcesses() { 
 
   string line, key, value;
@@ -167,7 +167,7 @@ int LinuxParser::TotalProcesses() {
   return total_processes; 
   }
 
-// TODO: Read and return the number of running processes
+// DONE: Read and return the number of running processes
 int LinuxParser::RunningProcesses() { 
 
   string line, key, value;
