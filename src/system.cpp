@@ -15,14 +15,21 @@ using std::string;
 using std::vector;
 using namespace LinuxParser;
 
+// General options: pass through with linux parser methods, could cache data when system is instantiated or when called by some update function
+
 // TODO: Return the system's CPU
 Processor& System::Cpu() { 
+    
     // May not need to do anything here
     return cpu_; 
     }
 
 // TODO: Return a container composed of the system's processes
-vector<Process>& System::Processes() { return processes_; }
+vector<Process>& System::Processes() { 
+    
+    // May not need to do anything here
+    return processes_; 
+    }
 
 // DONE: Return the system's kernel identifier (string)
 std::string System::Kernel() { 
@@ -31,7 +38,7 @@ std::string System::Kernel() {
     return LinuxParser::Kernel(); 
     }
 
-// TODO: Return the system's memory utilization
+// DONE: Return the system's memory utilization
 float System::MemoryUtilization() { 
     
     //float LinuxParser::MemoryUtilization()
@@ -45,14 +52,14 @@ std::string System::OperatingSystem() {
     return LinuxParser::OperatingSystem(); 
     }
 
-// TODO: Return the number of processes actively running on the system
+// DONE: Return the number of processes actively running on the system
 int System::RunningProcesses() { 
     
     //Usage: intLinuxParser::RunningProcesses()
     return LinuxParser::RunningProcesses(); 
     }
 
-// TODO: Return the total number of processes on the system
+// DONE: Return the total number of processes on the system
 int System::TotalProcesses() { 
     
     //Usage: int LinuxParser::TotalProcesses()
@@ -62,7 +69,6 @@ int System::TotalProcesses() {
 // TODO: Return the number of seconds since the system started running
 long int System::UpTime() { 
     
-    // Options pass through, could cache data when instantiated or when called by some update function
     //Usage: long LinuxParser::UpTime();
     //long int local_int = LinuxParser::UpTime();
     
