@@ -16,7 +16,10 @@ using std::vector;
 using namespace LinuxParser;
 
 // TODO: Return the system's CPU
-Processor& System::Cpu() { return cpu_; }
+Processor& System::Cpu() { 
+    // May not need to do anything here
+    return cpu_; 
+    }
 
 // TODO: Return a container composed of the system's processes
 vector<Process>& System::Processes() { return processes_; }
@@ -59,7 +62,9 @@ int System::TotalProcesses() {
 // TODO: Return the number of seconds since the system started running
 long int System::UpTime() { 
     
+    // Options pass through, could cache data when instantiated or when called by some update function
     //Usage: long LinuxParser::UpTime();
     //long int local_int = LinuxParser::UpTime();
-    return LinuxParser::UpTime();
+    
+    return LinuxParser::UpTime(); 
     }
