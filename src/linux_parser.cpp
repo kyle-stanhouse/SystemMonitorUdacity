@@ -139,8 +139,11 @@ long LinuxParser::Jiffies() {
   if (filestream.is_open()) {
     while (std::getline(filestream, line)) {
       std::istringstream linestream(line);
-      while (linestream >> user >> nice >> system >> idle >> iowait >> irq >> softirq >> steal >> guest >> guest_nice) {
+      while (linestream >> key >> user >> nice >> system >> idle >> iowait >> irq >> softirq >> steal >> guest >> guest_nice) {
       //while (linestream >> key >> kUser_ >> kNice_ >> kSystem_ >> kIdle_ >> kIOwait_ >> kIRQ_ >> kSoftIRQ_ >> kSteal_ >> kGuest_ >> kGuestNice_) {
+        //LinuxParser::CPUStates kUser_ = std::stoi(user);
+        LinuxParser::CPUStates kUser_ = 1;
+        
         if (key == "cpu") {
             //cpu_util_total = std::stof(kUser_ + kNice_ + kSystem_ + kIdle_ + kIOwait_ + kIRQ_ + kSoftIRQ_ + kSteal_ + kGuest_ + kGuestNice_);  
             cpu_util_total = std::stof(user) + std::stof(nice) + std::stof(system) + std::stof(idle) + std::stof(iowait) + std::stof(irq) + std::stof(softirq) + std::stof(steal) + std::stof(guest) + std::stof(guest_nice); 
