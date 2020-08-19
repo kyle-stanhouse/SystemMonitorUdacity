@@ -15,19 +15,21 @@ using std::string;
 using std::vector;
 using namespace LinuxParser;
 
-// General options: pass through with linux parser methods, could cache data when system is instantiated or when called by some update function
+// General options: 
+// Pass through with linux parser methods
+// Cache data when system is instantiated or when called by some update function
 
 // TODO: Return the system's CPU
 Processor& System::Cpu() { 
     
-    // May not need to do anything here
+    // Accessor
     return cpu_; 
     }
 
 // TODO: Return a container composed of the system's processes
 vector<Process>& System::Processes() { 
     
-    // May not need to do anything here
+    // Accessor
     return processes_; 
     }
 
