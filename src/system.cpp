@@ -29,7 +29,19 @@ Processor& System::Cpu() {
 // TODO: Return a container composed of the system's processes
 vector<Process>& System::Processes() { 
     
-    // Accessor
+    // Read list of Pids using LinuxParser
+    std::vector<int> pidFullList = LinuxParser::Pids();
+
+    // Sort processes according to heaviest use of RAM (ncurses only displays 10) ro CPU utilization
+    
+
+    // Create Process objects and add to process container
+    for ( int i=0; i < pidFullList.size(); i++ ){
+        Process process(pidFullList.back());
+        processes_.push_back(process);
+        pidFullList.pop_back();
+    }    
+
     return processes_; 
     }
 

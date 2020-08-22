@@ -6,15 +6,18 @@
 // TODO: Return the aggregate CPU utilization
 float Processor::Utilization() { 
 
-    float totald, idled;
+    float totald, idled; //local, perhaps unneccesary
 
-    //std::vector<std::string> cpuJiffies_ = LinuxParser::CpuUtilization();
+    //std::vector<std::string> cpuJiffies_ = LinuxParser::CpuUtilization(); //local 
     cpuJiffies_ = LinuxParser::CpuUtilization();
     
     //cpu_util_total = std::stof(user) + std::stof(nice) + std::stof(system) + std::stof(idle) + std::stof(iowait) + std::stof(irq) + std::stof(softirq) + std::stof(steal) + std::stof(guest) + std::stof(guest_nice); 
     //cpuUsageTotal_ = std::stof(cpuJiffies_[0]) + std::stof(cpuJiffies_[1]) + std::stof(cpuJiffies_[2]) + std::stof(cpuJiffies_[3]) + std::stof(cpuJiffies_[4]) + std::stof(cpuJiffies_[5]) + std::stof(cpuJiffies_[6]) + std::stof(cpuJiffies_[7]) + std::stof(cpuJiffies_[8]) + std::stof(cpuJiffies_[9]); 
-    cpuUsageTotal_ = std::stof(cpuJiffies_[0]) + std::stof(cpuJiffies_[1]) + std::stof(cpuJiffies_[2]) + std::stof(cpuJiffies_[LinuxParser::kIdle_]) + std::stof(cpuJiffies_[LinuxParser::kIOwait_]) + std::stof(cpuJiffies_[5]) + std::stof(cpuJiffies_[6]) + std::stof(cpuJiffies_[7]) + std::stof(cpuJiffies_[8]) + std::stof(cpuJiffies_[9]); 
-    //cpuUsageIdle_ = std::stof(cpuJiffies_[3]) + std::stof(cpuJiffies_[4]);    
+    cpuUsageTotal_ = std::stof(cpuJiffies_[0]) + std::stof(cpuJiffies_[1]) + std::stof(cpuJiffies_[2]) + 
+                        std::stof(cpuJiffies_[LinuxParser::kIdle_]) + std::stof(cpuJiffies_[LinuxParser::kIOwait_]) + 
+                            std::stof(cpuJiffies_[5]) + std::stof(cpuJiffies_[6]) + std::stof(cpuJiffies_[7]) + 
+                                std::stof(cpuJiffies_[8]) + std::stof(cpuJiffies_[9]); 
+        
     cpuUsageIdle_ = std::stof(cpuJiffies_[LinuxParser::kIdle_]) + std::stof(cpuJiffies_[LinuxParser::kIOwait_]);     
     totald = cpuUsageTotal_ - cpuUsageTotalLast_;
     idled = cpuUsageIdle_ - cpuUsageIdleLast_;
