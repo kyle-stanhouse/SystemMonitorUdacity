@@ -163,8 +163,64 @@ long LinuxParser::Jiffies() {
   }
 
 // TODO: Read and return the number of active jiffies for a PID
-// REMOVE: [[maybe_unused]] once you define the function
-long LinuxParser::ActiveJiffies(int pid[[maybe_unused]]) { return 0; }
+long LinuxParser::ActiveJiffies(int pid) { 
+  
+  string line, token, uptime_str;
+  int counter = 1;
+  long int utime, stime, cstime, cutime, starttime, total, seconds, Hertz, uptime, cpu_usage;
+
+  //string path = kProcDirectory + to_string(pid) + kStatusFilename;
+
+  std::ifstream stream(kProcDirectory + to_string(pid) + kStatFilename);
+  if (stream.is_open()) {
+    std::getline(stream, line);
+    std::istringstream linestream(line); //allows us to read tokens
+    //string dummy = linestream[23];
+    while(linestream >> token){
+      if (counter ==  14){
+          utime = std::stol(token);// / sysconf(_SC_CLK_TCK);
+          //return std::stol(uptime);
+          //return uptime_int;
+      }
+      else if (counter == 15)
+      {
+        stime = std::stol(token);
+      }
+      else if (counter == 16)
+      {
+        cutime = std::stol(token);
+      }
+      else if (counter == 17)
+      {
+        cstime = std::stol(token);
+      }
+      else if (counter == 22)
+      {
+        starttime = std::stol(token);
+      }
+      
+      counter++;
+    }
+  }
+
+    Hertz = sysconf(_SC_CLK_TCK);
+    total = utime + stime + cutime + cstime;
+
+    std::ifstream stream2(kProcDirectory + kUptimeFilename);
+    if (stream2.is_open()) {
+    std::getline(stream2, line);
+    std::istringstream linestream(line); //allows us to read tokens
+    //string dummy = linestream[23];
+    linestream >> uptime_str >> token;
+    uptime = std::stol(uptime_str);
+    }
+    
+    seconds = uptime - ( starttime / Hertz );
+    cpu_usage = 100 * (total / Hertz) / seconds;
+
+    return cpu_usage; 
+
+  }
 
 // TODO: Read and return the number of active jiffies for the system
 long LinuxParser::ActiveJiffies() { 
@@ -259,21 +315,22 @@ string LinuxParser::Command(int pid) {
   std::ifstream filestream(kProcDirectory + to_string(pid) + kCmdlineFilename);
   
   if (filestream.is_open()) {
-    while (std::getline(filestream, line)) {
-      std::istringstream linestream(line);
-      while (linestream >> path >> arg1 >> arg2) {
+    //while (std::getline(filestream, line)) {
+    std::getline(filestream, line);
+    //  std::istringstream linestream(line);
+      //while (linestream >> path >> arg1 >> arg2) {
       //  if (key == "procs_running") {
       //      running_processes = std::stoi(value);  
       //      break;
       //    }
-      }
-    }
+      //}
+    //}
   }
   
   //std::getline(filestream, line);
   //std::getline(line);
   //return string(); 
-  return "dummy";
+  return line;
   }
 
 // TODO: Read and return the memory used by a process
