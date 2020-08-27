@@ -120,57 +120,29 @@ long LinuxParser::UpTime() {
   return uptime_int;
 }
 
-// TODO: Read and return the number of jiffies for the system
+// DONE: Read and return the number of jiffies for the system
+
 long LinuxParser::Jiffies() { 
   
-  //Read and return the number of tokens in the (aggregate) cpu line of '/proc/stat'
-  // Total time passed
-  /*
-  std::string line, key, temp, user, nice, system, idle, iowait, irq, softirq, steal, guest, guest_nice;
-  float cpu_util_total;
-  std::ifstream filestream(kProcDirectory + kStatFilename);
-  if (filestream.is_open()) {
-    while (std::getline(filestream, line)) {
-      std::istringstream linestream(line);
-      while (linestream >> key >> user >> nice >> system >> idle >> iowait >> irq >> softirq >> steal >> guest >> guest_nice) {
-      //while (linestream >> key >> kUser_ >> kNice_ >> kSystem_ >> kIdle_ >> kIOwait_ >> kIRQ_ >> kSoftIRQ_ >> kSteal_ >> kGuest_ >> kGuestNice_) {
-        //LinuxParser::CPUStates kUser_ = std::stoi(user);
-        //LinuxParser::CPUStates kUser_ = 1;
-        
-        if (key == "cpu") {
-            //cpu_util_total = std::stof(kUser_ + kNice_ + kSystem_ + kIdle_ + kIOwait_ + kIRQ_ + kSoftIRQ_ + kSteal_ + kGuest_ + kGuestNice_);  
-            cpu_util_total = std::stof(user) + std::stof(nice) + std::stof(system) + std::stof(idle) + std::stof(iowait) + std::stof(irq) + std::stof(softirq) + std::stof(steal) + std::stof(guest) + std::stof(guest_nice); 
-            float cpu_usage = ( (cpu_util_total - (std::stof(idle) + std::stof(iowait)) ) / cpu_util_total);
-            //break;
-            return (int) ( (cpu_util_total - (std::stof(idle) + std::stof(iowait)) ) / cpu_util_total); 
-          }
-      }
-    }
-  }
-  */
-  //return (int) ( (cpu_util_total - (std::stof(idle) + std::stof(iowait)) ) / cpu_util_total); 
-  return 0;
+  return ( ActiveJiffies() + IdleJiffies() );
   }
 
 // TODO: Read and return the number of active jiffies for a PID
+// Called by 'float Process::CpuUtilization()'
 long LinuxParser::ActiveJiffies(int pid) { 
   
   string line, token, uptime_str;
   int counter = 1;
   long int utime, stime, cstime, cutime, starttime, total, seconds, Hertz, uptime, cpu_usage;
 
-  //string path = kProcDirectory + to_string(pid) + kStatusFilename;
-
   std::ifstream stream(kProcDirectory + to_string(pid) + kStatFilename);
   if (stream.is_open()) {
     std::getline(stream, line);
     std::istringstream linestream(line); //allows us to read tokens
-    //string dummy = linestream[23];
+    
     while(linestream >> token){
       if (counter ==  14){
           utime = std::stol(token);// / sysconf(_SC_CLK_TCK);
-          //return std::stol(uptime);
-          //return uptime_int;
       }
       else if (counter == 15)
       {
@@ -205,27 +177,43 @@ long LinuxParser::ActiveJiffies(int pid) {
     }
     
     seconds = uptime - ( starttime / Hertz );
-    cpu_usage = 100 * (total / Hertz) / seconds;
+    if (seconds > 0) {
+      cpu_usage = 100 * (total / Hertz) / seconds;
+    }
+    else { cpu_usage = 0.0; }
 
     return cpu_usage; 
 
   }
 
-// TODO: Read and return the number of active jiffies for the system
+// DONE: Read and return the number of active jiffies for the system
 long LinuxParser::ActiveJiffies() { 
   
-  // Add the active Jiffies together (kUser_, kNice_, kSystem_, kIRQ_, kSoftIRQ_, kSteal_, kGuest_, kGuestNice_)
+  // retrieve jiffies
+  std::vector<std::string> cpuJiffies = CpuUtilization();
 
-  return 0; }
+  // Add the active Jiffies together (kUser_, kNice_, kSystem_, kIRQ_, kSoftIRQ_, kSteal_, kGuest_, kGuestNice_)  
+  long cpuUsageActive = std::stol(cpuJiffies[kUser_]) + std::stol(cpuJiffies[kNice_]) + 
+                          std::stol(cpuJiffies[kSystem_]) + std::stol(cpuJiffies[kIRQ_]) + 
+                          std::stol(cpuJiffies[kSoftIRQ_]) + std::stol(cpuJiffies[kSteal_]) + 
+                          std::stol(cpuJiffies[kGuest_]) + std::stol(cpuJiffies[kGuestNice_]);;
 
-// TODO: Read and return the number of idle jiffies for the system
+  return cpuUsageActive; 
+  }
+
+// DONE: Read and return the number of idle jiffies for the system
 long LinuxParser::IdleJiffies() { 
   
+  // retrieve jiffies
+  std::vector<std::string> cpuJiffies = CpuUtilization();
   // Add the idle Jiffies together (kIdle_, kIOwait_)
+  long cpuUsageIdle = std::stol(cpuJiffies[kIdle_]) + 
+                        std::stol(cpuJiffies[kIOwait_]);     
 
-  return 0; }
+  return cpuUsageIdle; 
+  }
 
-// TODO: Read and return CPU utilization
+// DONE: Read and return CPU utilization
 vector<string> LinuxParser::CpuUtilization() { 
   
   //return vector of CPU Jiffies

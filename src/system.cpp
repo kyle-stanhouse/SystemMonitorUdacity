@@ -3,6 +3,7 @@
 #include <set>
 #include <string>
 #include <vector>
+#include <algorithm>
 
 #include "process.h"
 #include "processor.h"
@@ -32,15 +33,18 @@ vector<Process>& System::Processes() {
     // Read list of Pids using LinuxParser
     std::vector<int> pidFullList = LinuxParser::Pids();
 
-    // Sort processes according to heaviest use of RAM (ncurses only displays 10) ro CPU utilization
-    
-
     // Create Process objects and add to process container
+    //int g = pidFullList.size();
     for ( int i=0; i < pidFullList.size(); i++ ){
-        Process process(pidFullList.back());
+        Process process(pidFullList.back()); // create Process object
         processes_.push_back(process);
         pidFullList.pop_back();
     }    
+   
+    // Sort processes according to heaviest use CPU utilization
+    // Implementation uses '<' operator overload for processes
+    //std::sort (processes_.begin(), processes_.end());
+    //std::reverse(processes_.begin(), processes_.end());
 
     return processes_; 
     }
