@@ -64,37 +64,10 @@ long int Process::UpTime() {
     return LinuxParser::UpTime(pid_); 
     }
 
-// TODO: Overload the "less than" comparison operator for Process objects
-// REMOVE: [[maybe_unused]] once you define the function
-//bool Process::operator<(Process const& a[[maybe_unused]]) const { 
+// DONE: Overload the "less than" comparison operator for Process objects
 bool Process::operator<(Process const& a) const { 
     
-    bool less_than; 
-    // if cpuUtil_ is less than a.cpuUtil return a, else if vice versa return b, if a==b, it returns b
-    //return cpuUtil_ > a.cpuUtil_ ? cpuUtil_ : a.cpuUtil_;
-    /*
-    if (cpuUtil_ < a.cpuUtil_){
-        less_than = true;
-    }
-    else if(a.cpuUtil_ > cpuUtil_){
-        less_than = false;
-    }
-    else if(cpuUtil_ == a.cpuUtil_){
-        less_than = true;
-    }
-    */
-    
-    //return ram_ > a.ram_ ? ram_ : a.ram_;
-    ///*
-    if (ram_ < a.ram_){
-        less_than = true;
-    }
-    else if(a.ram_ > ram_){
-        less_than = false;
-    }
-    else if(ram_ == a.ram_){
-        less_than = true;
-    }
-    //*/
-   return less_than;  
+   
+   //return ( std::stoi(ram_) < std::stoi(a.ram_) ); //sort by ram
+   return ( cpuUtil_ < a.cpuUtil_);
 }

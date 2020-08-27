@@ -47,7 +47,7 @@ std::vector<std::string> CpuUtilization();
 long Jiffies();
 //long ActiveJiffies(const std::vector<std::string> Jiffies_vec);
 long ActiveJiffies();
-long ActiveJiffies(int pid);
+float ActiveJiffies(int pid);
 //long IdleJiffies(const std::vector<std::string> Jiffies_vec);
 long IdleJiffies();
 

@@ -129,11 +129,12 @@ long LinuxParser::Jiffies() {
 
 // TODO: Read and return the number of active jiffies for a PID
 // Called by 'float Process::CpuUtilization()'
-long LinuxParser::ActiveJiffies(int pid) { 
+float LinuxParser::ActiveJiffies(int pid) { 
   
   string line, token, uptime_str;
   int counter = 1;
-  long int utime, stime, cstime, cutime, starttime, total, seconds, Hertz, uptime, cpu_usage;
+  long int utime, stime, cstime, cutime, starttime, uptime;
+  float cpu_usage, seconds, Hertz, total;
 
   std::ifstream stream(kProcDirectory + to_string(pid) + kStatFilename);
   if (stream.is_open()) {
@@ -178,7 +179,7 @@ long LinuxParser::ActiveJiffies(int pid) {
     
     seconds = uptime - ( starttime / Hertz );
     if (seconds > 0) {
-      cpu_usage = 100 * (total / Hertz) / seconds;
+      cpu_usage = (total / Hertz) / seconds;
     }
     else { cpu_usage = 0.0; }
 
@@ -217,16 +218,13 @@ long LinuxParser::IdleJiffies() {
 vector<string> LinuxParser::CpuUtilization() { 
   
   //return vector of CPU Jiffies
-  //std::string line, key, temp, user, nice, system, idle, iowait, irq, softirq, steal, guest, guest_nice;
   std::string line, key, temp;
   vector<std::string> cpuJiffies; //local
   std::ifstream filestream(kProcDirectory + kStatFilename);
   if (filestream.is_open()) {
     while (std::getline(filestream, line)) {
       std::istringstream linestream(line);
-      //while (linestream >> key >> user >> nice >> system >> idle >> iowait >> irq >> softirq >> steal >> guest >> guest_nice) {
-      while(linestream >> key){
-        //word_count++;
+       while(linestream >> key){
         if (key == "cpu") {
             while(linestream >> temp){
               cpuJiffies.push_back(temp);
@@ -236,7 +234,6 @@ vector<string> LinuxParser::CpuUtilization() {
       }
     }
   }
-  //return {};
   return cpuJiffies;
   }
 
@@ -358,7 +355,7 @@ string LinuxParser::User(int pid) {
         }
       }
     }
-    return usrname;
+    return usrname; // sometimes the uid is 0 (root?), which doesn't correspond to the correct username
   }
 
 // DONE: Read and return the uptime of a process
@@ -367,8 +364,6 @@ long LinuxParser::UpTime(int pid) {
   string line, uptime, token;
   int counter = 1;
   long int uptime_int;
-
-  string path = kProcDirectory + to_string(pid) + kStatusFilename;
 
   std::ifstream stream(kProcDirectory + to_string(pid) + kStatFilename);
   if (stream.is_open()) {
