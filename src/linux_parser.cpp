@@ -337,7 +337,7 @@ string LinuxParser::Uid(int pid) {
 // TODO: Read and return the user associated with a process
 string LinuxParser::User(int pid) { 
   
-  string uid, line, usrname, x, value;
+  string uid, line, token_usr, usrname, x, value;
   
   // Get UID
   uid = Uid(pid);
@@ -348,8 +348,9 @@ string LinuxParser::User(int pid) {
       while (std::getline(filestream, line)) {
         std::replace(line.begin(), line.end(), ':', ' ');
         std::istringstream linestream(line);
-        while (linestream >> usrname >> x >> value) {
+        while (linestream >> token_usr >> x >> value) {
           if (value == uid) {
+            usrname = token_usr;	
             break;
           }
         }
