@@ -371,7 +371,7 @@ long LinuxParser::UpTime(int pid) {
     std::istringstream linestream(line); //allows us to read tokens
     while(linestream >> token){
       if (counter ==  22){
-          uptime_int = std::stol(token) / sysconf(_SC_CLK_TCK);
+          uptime_int = UpTime() - std::stol(token) / sysconf(_SC_CLK_TCK);
           break;
       }
       counter++;

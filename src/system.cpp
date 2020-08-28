@@ -44,7 +44,8 @@ vector<Process>& System::Processes() {
     }    
    
     // Sort processes according to heaviest use CPU utilization
-    // Implementation uses '<' operator overload for processes
+    // Implementation uses operator< overload for processes
+    // sorts in ascending order
     std::sort (processes_.begin(), processes_.end());
     //std::stable_sort (processes_.begin(), processes_.end());
     std::reverse(processes_.begin(), processes_.end());
